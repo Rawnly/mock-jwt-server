@@ -1,5 +1,6 @@
 import fastify, { FastifyRequest } from 'fastify';
 import fastifyJWT from 'fastify-jwt';
+import fastifyCors from 'fastify-cors'
 import { badRequest, unauthorized } from '@hapi/boom';
 import { USERS } from './data';
 
@@ -18,9 +19,13 @@ type RefreshPayload = {
   refreshToken: string;
 };
 
-app.register( fastifyJWT, {
-  secret: 'secret-key',
-} );
+app
+  .register( fastifyCors, {
+    origin: '*',
+  })
+  .register( fastifyJWT, {
+    secret: 'secret-key',
+  } );
 
 app.get( '/me', async ( req, res ) => {
   await req.jwtVerify();
